@@ -12,7 +12,7 @@
     "README.md"
   ],
   "scripts": {
-    "start": "tsx src/index.ts"
+    "start": "tsx --watch src/index.ts"
   },
   "keywords": [
     "feishu",
