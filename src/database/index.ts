@@ -12,6 +12,7 @@ export interface Document {
   spaceId: string;
   content?: string;
   path?: string;
+  [key: string]: any;
 }
 
 // 内存数据存储
@@ -35,9 +36,11 @@ class InMemoryDatabase {
   }
 
   // 保存文档
-  saveDocument(doc: Omit<Document, 'id'>): Document {
+  saveDocument(doc: Document): Document {
     const id = this.nextDocId++;
-    const newDoc = { id, ...doc };
+    // 移除doc中的id以避免冲突
+    const { id: _, ...docWithoutId } = doc;
+    const newDoc = { id, ...docWithoutId };
     this.documents.set(id, newDoc);
     return newDoc;
   }
@@ -73,10 +76,10 @@ class InMemoryDatabase {
   }
 
   // 获取特定文档
-  getDocumentByToken(token: string): Document | undefined {
+  getDocumentByToken(token: string): Document | null {
     return Array.from(this.documents.values()).find(
       doc => doc.token === token
-    );
+    ) || null;
   }
 }
 
